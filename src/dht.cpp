@@ -3,11 +3,10 @@
 
 int main()
 {
-    Node n0 = Node(0);
-    Node n1 = Node(30);
+    Node n0 = Node(30);
+    // Node n1 = Node(30);
 
-    n0.join(NULL);
-
-    std::cout << "Successor " << n0.getSuccessor() << std::endl;
-    std::cout << "Predecessor " << n0.getPredecessor() << std::endl;
+    n0.join(NULL);  // first node joining hash ring
+    n0.printInfo(); // not first node
+    // n1.join(&n0);
 }
