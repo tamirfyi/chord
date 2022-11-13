@@ -91,7 +91,7 @@ public:
 		{
 			Node *nextSuccessor = fingers.successors[i + 1];
 			int nextStart = fingers.start[i + 1];
-			bool set = isAnElementOf(nextStart, true, 0, false);
+			// bool set = isAnElementOf(nextStart, true, 0, false);
 		}
 	}
 
