@@ -68,6 +68,7 @@ public:
 		if (!node)
 		{
 			predecessor = this;
+			successor = this;
 			for (int i = 1; i < TABLE_SIZE; i++)
 			{
 				fingers.successors[i] = this;
@@ -76,35 +77,90 @@ public:
 		else
 		{
 			init_finger_table(node);
-			// updateOthers(node);
-			// migrateKeys();
+			update_others();
 		}
 	}
 
 	void init_finger_table(Node *m)
 	{
-		fingers.successors[1] = m->find_successor(fingers.start[1]);
-		predecessor = successor->predecessor;
-		successor->predecessor = this;
+		fingers.successors[1] = m->find_successor(fingers.start[1]); // update successor
+		successor = fingers.successors[1];													 // update successor pointer
+		predecessor = successor->predecessor;												 // update predecessor
+
+		successor->predecessor = this; // updating successors predecessor
+		predecessor->successor = this; // update predecessors successor
 
 		for (int i = 1; i < TABLE_SIZE - 1; i++)
 		{
-			Node *nextSuccessor = fingers.successors[i + 1];
-			int nextStart = fingers.start[i + 1];
-			// bool set = isAnElementOf(nextStart, true, 0, false);
+			bool set = isAnElementOf(nodeId, true, fingers.successors[i]->nodeId, false, fingers.start[i + 1]);
+			if (set)
+			{
+				fingers.successors[i + 1] = fingers.successors[i];
+			}
+			else
+			{
+				Node *x = m->find_successor(fingers.start[i + 1]);
+				fingers.successors[i + 1] = x;
+			}
+		}
+	}
+
+	void update_finger_table(Node *s, int i)
+	{
+		Node *p;
+		if (isAnElementOf(nodeId, true, fingers.successors[i]->nodeId, false, s->nodeId))
+		{
+			fingers.successors[i] = s;
+			p = predecessor;
+			p->update_finger_table(s, i);
+		}
+	}
+
+	void update_others()
+	{
+		// Node *p;
+		// for (int i = 1; i < TABLE_SIZE; i++)
+		// {
+		// 	int val = nodeId - ((int)pow(2, i - 1));
+		// 	if (val < 0)
+		// 		val += 256;
+
+		// 	p = find_predecessor(nodeId - (floor(pow(2, i - 1))));
+
+		// 	cout << val << "-> " << p->nodeId << endl;
+
+		// 	p->update_finger_table(this, i);
+		// }
+		Node *c;
+		for (int i = 1; i < TABLE_SIZE; i++)
+		{
+			c = find_predecessor(nodeId - (floor(pow(2, i - 1))));
+			c->fingers.successors[i] = find_successor(c->fingers.start[i]);
+			c->update_finger_table(this, i);
 		}
 	}
 
 	Node *find_successor(int id)
 	{
+		if (nodeId == id)
+		{
+			return this;
+		}
 		Node *m = find_predecessor(id);
+
 		return m->successor;
 	}
 
 	Node *find_predecessor(int id)
 	{
 		Node *m = this;
-		while (id <= m->nodeId && id > m->fingers.successors[1]->nodeId)
+
+		if (m->nodeId == m->successor->nodeId)
+		{
+			return m;
+		}
+
+		while (!isAnElementOf(m->nodeId, false, m->successor->nodeId, true, id))
 		{
 			m = m->closest_preceding_finger(id);
 		}
@@ -114,14 +170,16 @@ public:
 
 	Node *closest_preceding_finger(int id)
 	{
-		for (int i = TABLE_SIZE; i >= 1; i--)
+		// cout << "start cpf (" << id << ')' << endl;
+		for (int i = BITLENGTH; i > 0; i--)
 		{
 			int fingerId = fingers.successors[i]->nodeId;
-			if (fingerId > nodeId && fingerId < id)
+			if (isAnElementOf(nodeId, false, id, false, fingerId))
 			{
 				return fingers.successors[i];
 			}
 		}
+
 		return this;
 	}
 
@@ -135,12 +193,12 @@ public:
 	void printInfo()
 	{
 		cout << "------------ Node ID: " << nodeId << " ------------" << endl;
-		cout << "Successor: " << fingers.successors[1]->nodeId << " Predecessor: " << predecessor->nodeId << endl
-				 << endl;
+		cout << "Successor: " << successor->nodeId << " Predecessor: " << predecessor->nodeId << endl;
 		cout << "FingerTables:" << endl;
 		for (int i = 1; i < TABLE_SIZE; i++)
 		{
-			cout << "| k =  " << i << " [ " << fingers.start[i] << "\tsucc. = " << fingers.successors[i]->nodeId << " |" << endl;
+			cout << "| k =  " << i << " [ " << fingers.start[i] << ", " << (i >= TABLE_SIZE - 1 ? nodeId : fingers.start[i + 1]) << " )"
+					 << "\tsucc. = " << fingers.successors[i]->nodeId << " |" << endl;
 		}
 		cout << "-------------------------------------" << endl;
 	}

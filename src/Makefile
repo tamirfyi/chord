@@ -7,3 +7,4 @@ clean:
 all:
 	make clean --no-print-directory
 	make dht --no-print-directory
+	clear
