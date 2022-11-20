@@ -77,7 +77,7 @@ public:
 		else
 		{
 			init_finger_table(node);
-			update_others();
+			update_others(nodeId);
 		}
 	}
 
@@ -116,31 +116,23 @@ public:
 		}
 	}
 
-	void update_others()
+	void update_others(int start)
 	{
-		// Node *p;
-		// for (int i = 1; i < TABLE_SIZE; i++)
-		// {
-		// 	int val = nodeId - ((int)pow(2, i - 1));
-		// 	if (val < 0)
-		// 		val += 256;
+		Node *p = predecessor;
+		if (p->nodeId == start)
+		{
+			return;
+		}
 
-		// 	p = find_predecessor(nodeId - (floor(pow(2, i - 1))));
-
-		// 	cout << val << "-> " << p->nodeId << endl;
-
-		// 	p->update_finger_table(this, i);
-		// }
-		Node *c;
 		for (int i = 1; i < TABLE_SIZE; i++)
 		{
-			c = find_predecessor(nodeId - (floor(pow(2, i - 1))));
-			c->fingers.successors[i] = find_successor(c->fingers.start[i]);
-			c->update_finger_table(this, i);
+			p->fingers.successors[i] = find_successor(p->fingers.start[i]);
 		}
+		p->update_others(start);
 	}
 
-	Node *find_successor(int id)
+	Node *
+	find_successor(int id)
 	{
 		if (nodeId == id)
 		{
@@ -186,7 +178,32 @@ public:
 	// TODO: implement DHT lookup
 	int find(int key);
 	// TODO: implement DHT key insertion
-	void insert(int key);
+	void insert(int key, int val = -1)
+	{
+		Node *n = find_successor(key);
+		n->keys.insert({key, val}); // if val == -1, then value = "None"
+	}
+
+	void printKeys()
+	{
+		cout << "------------ Node ID: " << nodeId << " ------------" << endl;
+		cout << "{";
+
+		map<int, int>::iterator it;
+		for (it = keys.begin(); it != keys.end(); it++)
+		{
+			if (next(it) == keys.end())
+			{
+				cout << it->first << ": " << it->second << "}";
+			}
+			else
+			{
+				cout << it->first << ": " << it->second << ", ";
+			}
+		}
+		cout << endl;
+	}
+
 	// TODO: implement DHT key deletion
 	void remove(int key);
 

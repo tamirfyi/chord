@@ -18,10 +18,13 @@ int main()
     n4.join(&n3);
     n5.join(&n4);
 
-    n0.printInfo(); // not first node
-    n1.printInfo();
-    n2.printInfo();
-    n3.printInfo();
-    n4.printInfo();
-    n5.printInfo();
+    // n0.printInfo(); // not first node
+    // n1.printInfo();
+    // n2.printInfo();
+    // n3.printInfo();
+    // n4.printInfo();
+    // n5.printInfo();
+
+    n0.insert(20, 1);
+    n1.printKeys();
 }
