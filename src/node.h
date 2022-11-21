@@ -78,6 +78,51 @@ public:
 		{
 			init_finger_table(node);
 			update_others(nodeId);
+			migrate_keys();
+		}
+	}
+
+	void leave()
+	{
+		// Update pointers
+		predecessor->successor = successor;
+		successor->predecessor = predecessor;
+
+		successor->update_others(successor->nodeId);
+
+		if (keys.size() == 0)
+			return;
+
+		// Migrate keys to successor node
+		map<int, int>::iterator it;
+
+		for (it = keys.begin(); it != keys.end(); it++)
+		{
+			successor->keys.insert({it->first, it->second});
+		}
+	}
+
+	void migrate_keys()
+	{
+		// move keys in (predecessor; n] from succesor
+
+		if (successor->keys.size() == 0)
+		{
+			return;
+		}
+
+		map<int, int>::iterator it;
+
+		for (it = successor->keys.begin(); it != successor->keys.end(); it++)
+		{
+			int keyId = it->first;
+			if (isAnElementOf(predecessor->nodeId, false, nodeId, true, keyId))
+			{
+				keys.insert({it->first, it->second});
+				successor->keys.erase(keyId);
+
+				cout << "Migrated key " << keyId << " from node " << successor->nodeId << " to " << nodeId << endl;
+			}
 		}
 	}
 
@@ -105,16 +150,16 @@ public:
 		}
 	}
 
-	void update_finger_table(Node *s, int i)
-	{
-		Node *p;
-		if (isAnElementOf(nodeId, true, fingers.successors[i]->nodeId, false, s->nodeId))
-		{
-			fingers.successors[i] = s;
-			p = predecessor;
-			p->update_finger_table(s, i);
-		}
-	}
+	// void update_finger_table(Node *s, int i)
+	// {
+	// 	Node *p;
+	// 	if (isAnElementOf(nodeId, true, fingers.successors[i]->nodeId, false, s->nodeId))
+	// 	{
+	// 		fingers.successors[i] = s;
+	// 		p = predecessor;
+	// 		p->update_finger_table(s, i);
+	// 	}
+	// }
 
 	void update_others(int start)
 	{
@@ -177,11 +222,19 @@ public:
 
 	// TODO: implement DHT lookup
 	int find(int key);
+
 	// TODO: implement DHT key insertion
 	void insert(int key, int val = -1)
 	{
 		Node *n = find_successor(key);
 		n->keys.insert({key, val}); // if val == -1, then value = "None"
+	}
+
+	// TODO: implement DHT key deletion
+	void remove(int key)
+	{
+		Node *n = find_successor(key);
+		n->keys.erase(key);
 	}
 
 	void printKeys()
@@ -194,18 +247,32 @@ public:
 		{
 			if (next(it) == keys.end())
 			{
-				cout << it->first << ": " << it->second << "}";
+				if (it->second == -1)
+				{
+					cout << it->first << ": "
+							 << "None";
+				}
+				else
+				{
+					cout << it->first << ": " << it->second;
+				}
 			}
 			else
 			{
-				cout << it->first << ": " << it->second << ", ";
+				if (it->second == -1)
+				{
+					cout << it->first << ": "
+							 << "None"
+							 << ", ";
+				}
+				else
+				{
+					cout << it->first << ": " << it->second << ", ";
+				}
 			}
 		}
-		cout << endl;
+		cout << "}" << endl;
 	}
-
-	// TODO: implement DHT key deletion
-	void remove(int key);
 
 	void printInfo()
 	{
