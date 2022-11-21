@@ -221,7 +221,37 @@ public:
 	}
 
 	// TODO: implement DHT lookup
-	int find(int key);
+	int find(int key)
+	{
+		// Find potential successor of key
+		Node *n = find_successor(key);
+		int val = n->keys.find(key)->second;
+
+		// If key is not associated with node, return -1
+		if (n->keys.find(key) == n->keys.end())
+		{
+			return -1;
+		}
+
+		if (n->nodeId != nodeId)
+		{
+			cout << "Look-up result of key " << key << " from node " << nodeId << " with path [" << nodeId << ", " << n->nodeId << "] value is ";
+		}
+		else
+		{
+			cout << "Look-up result of key " << key << " from node " << nodeId << " with path [" << nodeId << "] value is ";
+		}
+
+		if (val == -1)
+		{
+			cout << "None" << endl;
+		}
+		else
+		{
+			cout << val << endl;
+		}
+		return val;
+	}
 
 	// TODO: implement DHT key insertion
 	void insert(int key, int val = -1)
