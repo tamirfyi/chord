@@ -80,6 +80,8 @@ public:
 			update_others(nodeId);
 			migrate_keys();
 		}
+
+		printAllTables();
 	}
 
 	void leave()
@@ -257,7 +259,16 @@ public:
 	void insert(int key, int val = -1)
 	{
 		Node *n = find_successor(key);
-		n->keys.insert({key, val}); // if val == -1, then value = "None"
+
+		map<int, int>::iterator it = n->keys.find(key);
+		if (it != n->keys.end())
+		{
+			it->second = val;
+		}
+		else
+		{
+			n->keys.insert({key, val}); // if val == -1, then value = "None"
+		}
 	}
 
 	// TODO: implement DHT key deletion
@@ -315,6 +326,30 @@ public:
 					 << "\tsucc. = " << fingers.successors[i]->nodeId << " |" << endl;
 		}
 		cout << "-------------------------------------" << endl;
+	}
+
+	void printAllTables()
+	{
+		cout << "*************** [ ALL TABLES ] ***************" << endl;
+
+		int start = nodeId;
+		Node *current = this;
+
+		if (current->successor->nodeId == start)
+		{
+			printInfo();
+		}
+		else
+		{
+			while (current->successor->nodeId != start)
+			{
+				printInfo();
+				current = successor;
+			}
+		}
+
+		cout << endl;
+		cout << endl;
 	}
 };
 
