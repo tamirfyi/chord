@@ -19,7 +19,7 @@ int main()
     n4.join(&n3);
     n5.join(&n4);
 
-        // Node Finger Tables
+    // Node Finger Tables - for debugging
     // n0.printInfo();
     // cout << endl;
     // n1.printInfo();
@@ -34,18 +34,18 @@ int main()
     // cout << endl;
 
     // Key Inserts
-    // n0.insert(0, 3);
-    // n1.insert(200);
-    // n2.insert(123);
-    // n3.insert(45, 3);
-    // n4.insert(99);
-    // n2.insert(60, 10);
-    // n0.insert(50, 8);
-    // n3.insert(100, 5);
-    // n3.insert(101, 4);
-    // n3.insert(102, 6);
-    // n5.insert(240, 8);
-    // n5.insert(250, 10);
+    n0.insert(0, 3);
+    n1.insert(200);
+    n2.insert(123);
+    n3.insert(45, 3);
+    n4.insert(99);
+    n2.insert(60, 10);
+    n0.insert(50, 8);
+    n3.insert(100, 5);
+    n3.insert(101, 4);
+    n3.insert(102, 6);
+    n5.insert(240, 8);
+    n5.insert(250, 10);
 
     // n0.printKeys();
     // cout << endl;
@@ -60,9 +60,8 @@ int main()
     // n5.printKeys();
     // cout << endl;
 
-    // Node n6 = Node(100);
-    // n6.join(&n2);
-    // cout << endl;
+    Node n6 = Node(100);
+    n6.join(&n2);
 
     // int key_vals[12] = {3, 200, 123, 45, 99, 60, 50, 100, 101, 102, 240, 250};
 
@@ -87,7 +86,7 @@ int main()
     // }
     // cout << endl;
 
-    // n2.leave();
+    n2.leave();
     // n0.printInfo();
     // cout << endl;
     // n1.printInfo();

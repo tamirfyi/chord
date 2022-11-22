@@ -12,6 +12,9 @@
 #define OFFSET 1
 #define TABLE_SIZE BITLENGTH + OFFSET
 
+#define JOIN 0
+#define LEAVE 1
+
 using namespace std;
 
 // forward declaration
@@ -81,7 +84,7 @@ public:
 			migrate_keys();
 		}
 
-		printAllTables();
+		printAllTables(JOIN);
 	}
 
 	void leave()
@@ -102,6 +105,8 @@ public:
 		{
 			successor->keys.insert({it->first, it->second});
 		}
+
+		// printAllTables(LEAVE);
 	}
 
 	void migrate_keys()
@@ -151,17 +156,6 @@ public:
 			}
 		}
 	}
-
-	// void update_finger_table(Node *s, int i)
-	// {
-	// 	Node *p;
-	// 	if (isAnElementOf(nodeId, true, fingers.successors[i]->nodeId, false, s->nodeId))
-	// 	{
-	// 		fingers.successors[i] = s;
-	// 		p = predecessor;
-	// 		p->update_finger_table(s, i);
-	// 	}
-	// }
 
 	void update_others(int start)
 	{
@@ -326,30 +320,42 @@ public:
 					 << "\tsucc. = " << fingers.successors[i]->nodeId << " |" << endl;
 		}
 		cout << "-------------------------------------" << endl;
+		cout << "*************************************" << endl
+				 << endl;
 	}
 
-	void printAllTables()
+	void printAllTables(int mode)
 	{
-		cout << "*************** [ ALL TABLES ] ***************" << endl;
+		if (mode == JOIN)
+		{
+			if (nodeId == predecessor->nodeId)
+			{
+				cout << "******* [ Node " << nodeId << " joined an empty network "
+						 << " ] *******" << endl;
+			}
+			else
+			{
+				cout << "******* [ Node " << nodeId << " joined Node " << predecessor->nodeId << " ] *******" << endl;
+			}
+		}
+		else if (mode == LEAVE)
+		{
+			cout << "******* [ Node " << nodeId << " joined an empty network "
+					 << " ] *******" << endl;
+		}
 
-		int start = nodeId;
-		Node *current = this;
+		Node *itr = this->successor;
+		int currentId = this->nodeId;
 
-		if (current->successor->nodeId == start)
+		if (mode == JOIN)
 		{
 			printInfo();
 		}
-		else
+		while (currentId != itr->nodeId)
 		{
-			while (current->successor->nodeId != start)
-			{
-				printInfo();
-				current = successor;
-			}
+			itr->printInfo();
+			itr = itr->successor;
 		}
-
-		cout << endl;
-		cout << endl;
 	}
 };
 
