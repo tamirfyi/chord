@@ -84,12 +84,13 @@ public:
 			migrate_keys();
 		}
 
-		printAllTables(JOIN);
+		printAllTables(JOIN, NULL);
 	}
 
 	void leave()
 	{
 		// Update pointers
+		Node *succ = successor;
 		predecessor->successor = successor;
 		successor->predecessor = predecessor;
 
@@ -106,7 +107,7 @@ public:
 			successor->keys.insert({it->first, it->second});
 		}
 
-		// printAllTables(LEAVE);
+		printAllTables(LEAVE, succ);
 	}
 
 	void migrate_keys()
@@ -131,6 +132,7 @@ public:
 				cout << "Migrated key " << keyId << " from node " << successor->nodeId << " to " << nodeId << endl;
 			}
 		}
+		cout << endl;
 	}
 
 	void init_finger_table(Node *m)
@@ -306,7 +308,8 @@ public:
 				}
 			}
 		}
-		cout << "}" << endl;
+		cout << "}" << endl
+				 << endl;
 	}
 
 	void printInfo()
@@ -324,7 +327,7 @@ public:
 				 << endl;
 	}
 
-	void printAllTables(int mode)
+	void printAllTables(int mode, Node *leaveSuccessor)
 	{
 		if (mode == JOIN)
 		{
@@ -340,7 +343,7 @@ public:
 		}
 		else if (mode == LEAVE)
 		{
-			cout << "******* [ Node " << nodeId << " joined an empty network "
+			cout << "******* [ Node " << nodeId << " left the network "
 					 << " ] *******" << endl;
 		}
 
@@ -350,11 +353,21 @@ public:
 		if (mode == JOIN)
 		{
 			printInfo();
+			while (currentId != itr->nodeId)
+			{
+				itr->printInfo();
+				itr = itr->successor;
+			}
 		}
-		while (currentId != itr->nodeId)
+		if (mode == LEAVE)
 		{
+			currentId = leaveSuccessor->predecessor->nodeId;
+			while (currentId != itr->nodeId)
+			{
+				itr->printInfo();
+				itr = itr->successor;
+			}
 			itr->printInfo();
-			itr = itr->successor;
 		}
 	}
 };
