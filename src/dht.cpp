@@ -4,6 +4,7 @@
 
 int main()
 {
+    // Create nodes
     Node n0 = Node(0);
     Node n1 = Node(30);
     Node n2 = Node(65);
@@ -27,7 +28,7 @@ int main()
     // n4.printInfo();
     // n5.printInfo();
 
-    // Key Inserts
+    // Insert keys
     cout << "Inserting keys..." << endl
          << endl;
     n0.insert(3, 3);
@@ -43,6 +44,7 @@ int main()
     n5.insert(240, 8);
     n5.insert(250, 10);
 
+    // Print keys
     n0.printKeys();
     n1.printKeys();
     n2.printKeys();
@@ -50,37 +52,35 @@ int main()
     n4.printKeys();
     n5.printKeys();
 
+    // Join new node with ID = 100
     cout << "Node 100 joining network after Node 65" << endl;
     Node n6 = Node(100);
     n6.join(&n2);
 
-    // int key_vals[12] = {3, 200, 123, 45, 99, 60, 50, 100, 101, 102, 240, 250};
+    // Find all the keys
+    int key_vals[12] = {3, 200, 123, 45, 99, 60, 50, 100, 101, 102, 240, 250};
 
-    // cout << "------------node 0------------" << endl;
-    // for (auto key : key_vals)
-    // {
-    //     n0.find(key);
-    // }
-    // cout << endl;
+    cout << "------------node 0------------" << endl;
+    for (auto key : key_vals)
+    {
+        n0.find(key);
+    }
+    cout << endl;
 
-    // cout << "------------node 65------------" << endl;
-    // for (auto key : key_vals)
-    // {
-    //     n2.find(key);
-    // }
-    // cout << endl;
+    cout << "------------node 65------------" << endl;
+    for (auto key : key_vals)
+    {
+        n2.find(key);
+    }
+    cout << endl;
 
-    // cout << "------------node 100------------" << endl;
-    // for (auto key : key_vals)
-    // {
-    //     n6.find(key);
-    // }
-    // cout << endl;
+    cout << "------------node 100------------" << endl;
+    for (auto key : key_vals)
+    {
+        n6.find(key);
+    }
+    cout << endl;
 
+    // Node(65) leaves the network
     n2.leave();
-    // n0.printInfo();
-    // n1.printInfo();
-    // n0.printKeys();
-    // n1.printKeys();
-    // n6.printKeys();
 }
