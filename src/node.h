@@ -117,17 +117,17 @@ public:
 		successor->predecessor = predecessor;
 
 		// Update other nodes from successor
-		successor->update_others(successor->nodeId);
+		update_others(successor->nodeId);
 
 		// If there are no keys associated with thise node, do not perform migration
-		if (keys.size() == 0)
-			return;
-
-		// Migrate keys to successor node
-		map<int, int>::iterator it; // Iterator for map of keys
-		for (it = keys.begin(); it != keys.end(); it++)
+		if (keys.size() != 0)
 		{
-			successor->keys.insert({it->first, it->second});
+			// Migrate keys to successor node
+			map<int, int>::iterator it; // Iterator for map of keys
+			for (it = keys.begin(); it != keys.end(); it++)
+			{
+				successor->keys.insert({it->first, it->second});
+			}
 		}
 
 		// Print all tables after leave
@@ -425,6 +425,12 @@ public:
 		{
 			cout << "******* [ Node " << nodeId << " left the network "
 					 << " ] *******" << endl;
+			if (nodeId == successor->nodeId)
+			{
+				cout << "-> No nodes left in the network" << endl
+						 << endl;
+				return;
+			}
 		}
 
 		Node *itr = this->successor;
