@@ -101,7 +101,7 @@ public:
 		}
 
 		// Print all tables after join
-		printAllTables(JOIN, NULL);
+		printAllTables(JOIN);
 	}
 
 	/**
@@ -109,9 +109,6 @@ public:
 	 */
 	void leave()
 	{
-		// Store pointer to original successor for printAllTables
-		Node *succ = successor;
-
 		// Update pointers
 		predecessor->successor = successor;
 		successor->predecessor = predecessor;
@@ -131,7 +128,7 @@ public:
 		}
 
 		// Print all tables after leave
-		printAllTables(LEAVE, succ);
+		printAllTables(LEAVE);
 	}
 
 	/**
@@ -327,6 +324,8 @@ public:
 		{
 			n->keys.insert({key, val}); // if val == -1, then value = "None"
 		}
+
+		printAllKeys(key);
 	}
 
 	/**
@@ -380,6 +379,30 @@ public:
 				 << endl;
 	}
 
+	void printAllKeys(int key)
+	{
+		Node *itr = this->find_successor(0);
+		Node *end = itr->predecessor;
+
+		cout << "********** Inserted key at node " << key << " **********" << endl;
+		if (itr->nodeId == end->nodeId)
+		{
+			itr->printKeys();
+			return;
+		}
+		else
+		{
+			while (end->nodeId != itr->nodeId)
+			{
+				itr->printKeys();
+				itr = itr->successor;
+			}
+			itr->printKeys();
+		}
+		cout << "*************************************" << endl
+				 << endl;
+	}
+
 	/**
 	 * Function to print the information related to a node in the network
 	 * Information includes:
@@ -405,9 +428,8 @@ public:
 	/**
 	 * Function to print all tables after a node joins or leaves a network
 	 * @param mode JOIN = 0, LEAVE = 1
-	 * @param leaveSuccessor reference to successor of node leaving the network to format prints correctly
 	 */
-	void printAllTables(int mode, Node *leaveSuccessor)
+	void printAllTables(int mode)
 	{
 		if (mode == JOIN)
 		{
@@ -433,26 +455,24 @@ public:
 			}
 		}
 
-		Node *itr = this->successor;
-		int currentId = this->nodeId;
+		Node *itr = this->find_successor(0);
+		Node *end = itr->predecessor;
 
-		if (mode == JOIN)
+		if (itr->nodeId == end->nodeId)
 		{
-			printInfo();
-			while (currentId != itr->nodeId)
-			{
-				itr->printInfo();
-				itr = itr->successor;
-			}
+			itr->printInfo();
+			// cout << nodeId << endl;
+			return;
 		}
-		if (mode == LEAVE)
+		else
 		{
-			currentId = leaveSuccessor->predecessor->nodeId;
-			while (currentId != itr->nodeId)
+			while (end->nodeId != itr->nodeId)
 			{
+				// cout << itr->nodeId << endl;
 				itr->printInfo();
 				itr = itr->successor;
 			}
+			// cout << itr->nodeId << endl;
 			itr->printInfo();
 		}
 	}

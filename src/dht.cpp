@@ -20,18 +20,16 @@ int main()
     n4.join(&n3);
     n5.join(&n4);
 
-    // Node Finger Tables - for debugging
-    n0.printInfo();
-    n1.printInfo();
-    n2.printInfo();
-    n3.printInfo();
-    n4.printInfo();
-    n5.printInfo();
+    // // Print Finger Tables - for debugging
+    // n0.printInfo();
+    // n1.printInfo();
+    // n2.printInfo();
+    // n3.printInfo();
+    // n4.printInfo();
+    // n5.printInfo();
 
     // Insert keys
-    cout
-        << "Inserting keys..." << endl
-        << endl;
+    cout << "-> Inserting keys..." << endl;
     n0.insert(3, 3);
     n1.insert(200);
     n2.insert(123);
@@ -45,13 +43,13 @@ int main()
     n5.insert(240, 8);
     n5.insert(250, 10);
 
-    // Print keys
-    n0.printKeys();
-    n1.printKeys();
-    n2.printKeys();
-    n3.printKeys();
-    n4.printKeys();
-    n5.printKeys();
+    // // Print Keys - for debugging
+    // n0.printKeys();
+    // n1.printKeys();
+    // n2.printKeys();
+    // n3.printKeys();
+    // n4.printKeys();
+    // n5.printKeys();
 
     // Join new node with ID = 100
     cout << "-> Node 100 joining network after Node 65" << endl;
@@ -84,8 +82,4 @@ int main()
 
     // Node(65) leaves the network
     n2.leave();
-
-    // // Debug printing
-    // n0.printInfo();
-    // n1.printInfo();
 }
