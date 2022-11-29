@@ -4,7 +4,7 @@ Implementation of a Distributed Hash Table (using Chord)
 
 ## Compilation
 
-If you'd like to use the implementation of Chord in this project, make sure to include the following files:
+If you'd like to use the implementation of Chord in this project, make sure to include the following files:\
 `dht.cpp`\
 `tlib.cpp`
 
